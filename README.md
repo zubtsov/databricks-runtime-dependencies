@@ -26,7 +26,7 @@ Example:
 <project>
     <parent>
         <groupId>com.github.zubtsov.databricks</groupId>
-        <artifactId>runtime-bom-14.3-lts</artifactId>
+        <artifactId>runtime-bom-aws-14.3-lts</artifactId>
         <version>0.0.2</version>
     </parent>
     ...
@@ -45,7 +45,7 @@ Example:
     <dependencies>
         <dependency>
             <groupId>com.github.zubtsov.databricks</groupId>
-            <artifactId>runtime-bom-14.3-lts</artifactId>
+            <artifactId>runtime-bom-aws-14.3-lts</artifactId>
             <version>0.0.2</version>
             <type>pom</type>
             <scope>import</scope>
