@@ -14,7 +14,7 @@ versions from those installed on a cluster.
 There are POM files for each Databricks runtime version and configuration. You have two options for using this project
 listed below.
 
-### Maven Inheritance
+### Inheritance
 
 Specify the chosen POM as a parent in your project's POM file. With this option, you'll also inherit
 properties such as Apache Spark, Scala, Delta Lake, and other versions information.
@@ -33,7 +33,7 @@ Example:
 </project>
 ```
 
-### Dependency Declaration
+### Dependency declaration
 
 Declare the POM file as a dependency with type "POM" and scope "import".
 
@@ -56,4 +56,19 @@ Example:
 ```
 
 All packages can be found [here](https://central.sonatype.com/namespace/io.github.zubtsov.databricks).
-Please use packages containing the acronym "bom".
+Please use artifacts containing the acronym "bom" in their **artifactId**.
+
+## Choosing a proper artifact
+
+**artifactId** has the following format:
+
+```
+runtime-bom-<cloud provider>-<runtime version>
+```
+
+where
+
+- cloud provider - "aws", "azure" or "gcp"
+- runtime version - version of your Databricks runtime
+
+Please select the latest version.
