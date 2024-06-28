@@ -25,7 +25,7 @@ Example:
 
 <project>
     <parent>
-        <groupId>com.github.zubtsov.databricks</groupId>
+        <groupId>io.github.zubtsov.databricks</groupId>
         <artifactId>runtime-bom-aws-14.3-lts</artifactId>
         <version>0.0.2</version>
     </parent>
@@ -44,7 +44,7 @@ Example:
 <project>
     <dependencies>
         <dependency>
-            <groupId>com.github.zubtsov.databricks</groupId>
+            <groupId>io.github.zubtsov.databricks</groupId>
             <artifactId>runtime-bom-aws-14.3-lts</artifactId>
             <version>0.0.2</version>
             <type>pom</type>
@@ -72,3 +72,5 @@ where
 - runtime version - version of your Databricks runtime
 
 Please select the latest version.
+
+Packages: https://central.sonatype.com/namespace/io.github.zubtsov.databricks 
