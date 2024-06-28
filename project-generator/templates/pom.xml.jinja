@@ -1,0 +1,72 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>Dependency management for {{ url }}</description>
+    <url>{{ PROJECT_URL }}</url>
+    <parent>
+        <groupId>io.github.zubtsov.databricks</groupId>
+        <artifactId>{{ parent_artifact_id }}</artifactId>
+        <version>{{ PROJECT_VERSION }}</version>
+    </parent>
+    <!--Source: {{ url }}-->
+    <artifactId>{{ artifact_id }}</artifactId>
+    <packaging>pom</packaging>
+    {%- if modules|length > 0 %}
+    <modules>
+        {%- for module_name in modules %}
+            <module>{{ module_name }}</module>
+        {%- endfor %}
+    </modules>
+    {%- endif %}
+    {%- if not is_ml %}
+        <properties>
+            <scala.major.version>{{ scala_major_version }}</scala.major.version>
+            <scala.minor.version>{{ scala_minor_version }}</scala.minor.version>
+            <delta.lake.version>{{ delta_lake_version }}</delta.lake.version>
+            <spark.version>{{ spark_version }}</spark.version>
+        </properties>
+    {%- endif %}
+    {%- if not is_ml %}
+    <profiles>
+        {%- for name, prof in profiles.items() %}
+        {%- if prof.libraries|length > 0 %}
+        <profile>
+            <id>{{ name }}</id>
+            <activation>
+                <os>
+                {%- for os_prop_name, os_prop_value in prof.activation.items() %}
+                    <{{ os_prop_name }}>{{ os_prop_value }}</{{ os_prop_name }}>
+                {%- endfor %}
+                </os>
+            </activation>
+            <dependencyManagement>
+                <dependencies>
+                    {%- for lib in prof.libraries %}
+                    <dependency>
+                        <groupId>{{ lib.group_id }}</groupId>
+                        <artifactId>{{ lib.artifact_id }}</artifactId>
+                        <version>{{ lib.artifact_version }}</version>
+                        <scope>provided</scope>
+                    </dependency>
+                    {%- endfor %}
+                </dependencies>
+            </dependencyManagement>
+        </profile>
+        {%- endif %}
+        {%- endfor %}
+    </profiles>
+    {%- endif %}
+    <dependencyManagement>
+        <dependencies>
+            {%- for il in platform_independent_libraries %}
+                <dependency>
+                    <groupId>{{ il.group_id }}</groupId>
+                    <artifactId>{{ il.artifact_id }}</artifactId>
+                    <version>{{ il.artifact_version }}</version>
+                    <scope>provided</scope>
+                </dependency>
+            {%- endfor %}
+        </dependencies>
+    </dependencyManagement>
+</project>
