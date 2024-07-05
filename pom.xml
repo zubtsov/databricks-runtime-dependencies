@@ -27,7 +27,7 @@
     <inceptionYear>2024</inceptionYear>
     <groupId>io.github.zubtsov.databricks</groupId>
     <artifactId>runtime-bom-root</artifactId>
-    <version>0.0.3</version>
+    <version>0.0.4</version>
     <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -76,7 +76,7 @@
         <dependencies>
             <dependency>
                 <groupId>io.delta</groupId>
-                <artifactId>delta-core_${scala.major.version}</artifactId>
+                <artifactId>delta-spark_${scala.major.version}</artifactId>
                 <version>${delta.lake.version}</version>
                 <scope>provided</scope>
             </dependency>

@@ -7,7 +7,7 @@
     <parent>
         <groupId>io.github.zubtsov.databricks</groupId>
         <artifactId>runtime-bom-root</artifactId>
-        <version>0.0.3</version>
+        <version>0.0.4</version>
     </parent>
     <!--Source: https://learn.microsoft.com/en-us/azure/databricks/release-notes/runtime/13.3lts-->
     <artifactId>runtime-bom-azure-13.3-lts</artifactId>
@@ -1469,19 +1469,22 @@
                 <dependency>
                     <groupId>org.apache.mesos</groupId>
                     <artifactId>mesos</artifactId>
-                    <version>1.11.0-shaded-protobuf</version>
+                    <version>1.11.0</version>
+                    <classifier>shaded-protobuf</classifier>
                     <scope>provided</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.apache.orc</groupId>
                     <artifactId>orc-core</artifactId>
-                    <version>1.8.4-shaded-protobuf</version>
+                    <version>1.8.4</version>
+                    <classifier>shaded-protobuf</classifier>
                     <scope>provided</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.apache.orc</groupId>
                     <artifactId>orc-mapreduce</artifactId>
-                    <version>1.8.4-shaded-protobuf</version>
+                    <version>1.8.4</version>
+                    <classifier>shaded-protobuf</classifier>
                     <scope>provided</scope>
                 </dependency>
                 <dependency>
@@ -1542,18 +1545,6 @@
                     <groupId>org.codehaus.jackson</groupId>
                     <artifactId>jackson-mapper-asl</artifactId>
                     <version>1.9.13</version>
-                    <scope>provided</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.codehaus.janino</groupId>
-                    <artifactId>commons-compiler</artifactId>
-                    <version>3.0.16</version>
-                    <scope>provided</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.codehaus.janino</groupId>
-                    <artifactId>janino</artifactId>
-                    <version>3.0.16</version>
                     <scope>provided</scope>
                 </dependency>
                 <dependency>
@@ -1906,19 +1897,19 @@
                 </dependency>
                 <dependency>
                     <groupId>org.scala-lang</groupId>
-                    <artifactId>scala-compiler_${scala.major.version}</artifactId>
+                    <artifactId>scala-compiler</artifactId>
                     <version>${scala.version}</version>
                     <scope>provided</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.scala-lang</groupId>
-                    <artifactId>scala-library_${scala.major.version}</artifactId>
+                    <artifactId>scala-library</artifactId>
                     <version>${scala.version}</version>
                     <scope>provided</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.scala-lang</groupId>
-                    <artifactId>scala-reflect_${scala.major.version}</artifactId>
+                    <artifactId>scala-reflect</artifactId>
                     <version>${scala.version}</version>
                     <scope>provided</scope>
                 </dependency>

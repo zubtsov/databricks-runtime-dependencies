@@ -7,7 +7,7 @@
     <parent>
         <groupId>io.github.zubtsov.databricks</groupId>
         <artifactId>runtime-bom-aws-15.3</artifactId>
-        <version>0.0.3</version>
+        <version>0.0.4</version>
     </parent>
     <!--Source: https://docs.databricks.com/en/release-notes/runtime/15.3ml.html-->
     <artifactId>runtime-bom-aws-15.3-ml-cpu</artifactId>

@@ -7,7 +7,7 @@
     <parent>
         <groupId>io.github.zubtsov.databricks</groupId>
         <artifactId>runtime-bom-gcp-9.1-lts</artifactId>
-        <version>0.0.3</version>
+        <version>0.0.4</version>
     </parent>
     <!--Source: https://docs.gcp.databricks.com/en/release-notes/runtime/9.1lts-ml.html-->
     <artifactId>runtime-bom-gcp-9.1-lts-ml-cpu</artifactId>

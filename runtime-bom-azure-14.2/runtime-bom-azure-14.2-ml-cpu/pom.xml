@@ -7,7 +7,7 @@
     <parent>
         <groupId>io.github.zubtsov.databricks</groupId>
         <artifactId>runtime-bom-azure-14.2</artifactId>
-        <version>0.0.3</version>
+        <version>0.0.4</version>
     </parent>
     <!--Source: https://learn.microsoft.com/en-us/azure/databricks/release-notes/runtime/14.2ml-->
     <artifactId>runtime-bom-azure-14.2-ml-cpu</artifactId>

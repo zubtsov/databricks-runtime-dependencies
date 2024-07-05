@@ -3,7 +3,7 @@ AZURE_CLOUD_NAME = 'azure'
 GCP_CLOUD_NAME = 'gcp'
 
 PROJECT_GROUP_ID = 'io.github.zubtsov.databricks'
-PROJECT_VERSION = '0.0.3'
+PROJECT_VERSION = '0.0.4'
 
 PROJECT_URL = f'https://github.com/zubtsov/databricks-runtime-dependencies'
 

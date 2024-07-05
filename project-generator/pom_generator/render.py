@@ -114,16 +114,29 @@ def build_extra_context(rel_info, scala_vers_map):
     }
 
     for ri_lib in rel_info['installed_libraries']:
-        if ri_lib['group_id'] == 'com.github.fommil.netlib' and \
-                ri_lib['artifact_id'] in {'native_ref-java', 'native_system-java'} and \
-                ri_lib['artifact_version'].endswith('-natives'):
-            continue  # these dependencies are removed because of the version conflict: with and without -natives
+        # on Apache Spark 3.5 tests fail because of the version of this dependency
+        is_janino = ri_lib['group_id'] == 'org.codehaus.janino'
+        # these dependencies are removed because of the version conflict: with and without -natives
+        is_natives_netlib = ri_lib['group_id'] == 'com.github.fommil.netlib' and \
+                            ri_lib['artifact_id'] in {'native_ref-java',
+                                                      'native_system-java'} and \
+                            ri_lib['artifact_version'].endswith('-natives')
+        if is_natives_netlib or is_janino:
+            continue
 
-        # TODO: replace only suffix
-        ri_lib['artifact_id'] = ri_lib['artifact_id'].replace(f'_{scala_major_version}',
-                                                              '_${scala.major.version}')
+            # TODO: replace only suffix
+        if ri_lib['group_id'] == 'org.scala-lang':
+            ri_lib['artifact_id'] = ri_lib['artifact_id'].replace(f'_{scala_major_version}',
+                                                                  '')
+        else:
+            ri_lib['artifact_id'] = ri_lib['artifact_id'].replace(f'_{scala_major_version}',
+                                                                  '_${scala.major.version}')
         if 'org.scala-lang' in ri_lib['group_id'] and rel_scala_version == ri_lib['artifact_version']:
             ri_lib['artifact_version'] = '${scala.version}'
+
+        if '-shaded-protobuf' in ri_lib['artifact_version']:
+            ri_lib['artifact_version'] = ri_lib['artifact_version'].replace('-shaded-protobuf', '')
+            ri_lib['classifier'] = 'shaded-protobuf'
 
         if WINDOWS_X86_64_INDICATOR in ri_lib['artifact_id'] or WINDOWS_X86_64_INDICATOR in ri_lib['artifact_version']:
             profiles[WINDOWS_X86_64_INDICATOR]['libraries'].append(ri_lib)

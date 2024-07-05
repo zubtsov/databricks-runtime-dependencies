@@ -7,7 +7,7 @@
     <parent>
         <groupId>io.github.zubtsov.databricks</groupId>
         <artifactId>runtime-bom-gcp-14.2</artifactId>
-        <version>0.0.3</version>
+        <version>0.0.4</version>
     </parent>
     <!--Source: https://docs.gcp.databricks.com/en/release-notes/runtime/14.2ml.html-->
     <artifactId>runtime-bom-gcp-14.2-ml-gpu</artifactId>

@@ -64,6 +64,9 @@
                     <groupId>{{ il.group_id }}</groupId>
                     <artifactId>{{ il.artifact_id }}</artifactId>
                     <version>{{ il.artifact_version }}</version>
+                    {%- if il.classifier %}
+                    <classifier>{{ il.classifier }}</classifier>
+                    {%- endif %}
                     <scope>provided</scope>
                 </dependency>
             {%- endfor %}

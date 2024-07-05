@@ -7,7 +7,7 @@
     <parent>
         <groupId>io.github.zubtsov.databricks</groupId>
         <artifactId>runtime-bom-root</artifactId>
-        <version>0.0.3</version>
+        <version>0.0.4</version>
     </parent>
     <!--Source: https://docs.databricks.com/en/release-notes/runtime/9.1lts.html-->
     <artifactId>runtime-bom-aws-9.1-lts</artifactId>
@@ -1547,18 +1547,6 @@
                     <scope>provided</scope>
                 </dependency>
                 <dependency>
-                    <groupId>org.codehaus.janino</groupId>
-                    <artifactId>commons-compiler</artifactId>
-                    <version>3.0.16</version>
-                    <scope>provided</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.codehaus.janino</groupId>
-                    <artifactId>janino</artifactId>
-                    <version>3.0.16</version>
-                    <scope>provided</scope>
-                </dependency>
-                <dependency>
                     <groupId>org.datanucleus</groupId>
                     <artifactId>datanucleus-api-jdo</artifactId>
                     <version>4.2.4</version>
@@ -1896,19 +1884,19 @@
                 </dependency>
                 <dependency>
                     <groupId>org.scala-lang</groupId>
-                    <artifactId>scala-compiler_${scala.major.version}</artifactId>
+                    <artifactId>scala-compiler</artifactId>
                     <version>${scala.version}</version>
                     <scope>provided</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.scala-lang</groupId>
-                    <artifactId>scala-library_${scala.major.version}</artifactId>
+                    <artifactId>scala-library</artifactId>
                     <version>${scala.version}</version>
                     <scope>provided</scope>
                 </dependency>
                 <dependency>
                     <groupId>org.scala-lang</groupId>
-                    <artifactId>scala-reflect_${scala.major.version}</artifactId>
+                    <artifactId>scala-reflect</artifactId>
                     <version>${scala.version}</version>
                     <scope>provided</scope>
                 </dependency>

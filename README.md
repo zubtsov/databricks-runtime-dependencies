@@ -42,15 +42,17 @@ Example:
 ```xml
 
 <project>
-    <dependencies>
-        <dependency>
-            <groupId>io.github.zubtsov.databricks</groupId>
-            <artifactId>runtime-bom-aws-14.3-lts</artifactId>
-            <version>0.0.3</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.github.zubtsov.databricks</groupId>
+                <artifactId>runtime-bom-aws-14.3-lts</artifactId>
+                <version>0.0.3</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     ...
 </project>
 ```
