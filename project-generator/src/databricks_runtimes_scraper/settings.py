@@ -1,4 +1,4 @@
-from constants import AWS_CLOUD_NAME, AZURE_CLOUD_NAME, GCP_CLOUD_NAME
+from common.constants import AWS_CLOUD_NAME, AZURE_CLOUD_NAME, GCP_CLOUD_NAME
 
 BOT_NAME = "databricks_runtimes_scraper"
 

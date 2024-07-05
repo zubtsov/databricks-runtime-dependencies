@@ -12,14 +12,20 @@
     <!--Source: https://learn.microsoft.com/en-us/azure/databricks/release-notes/runtime/10.4lts-ml-->
     <artifactId>runtime-bom-azure-10.4-lts-ml-cpu</artifactId>
     <packaging>pom</packaging>
+
+    <profiles>
+        <profile>
+            <id>add-all-dependencies</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <dependencies>
+            </dependencies>
+        </profile>
+    </profiles>
+
     <dependencyManagement>
         <dependencies>
-                <dependency>
-                    <groupId>graphframes</groupId>
-                    <artifactId>graphframes</artifactId>
-                    <version>0.8.2-db1-spark3.2</version>
-                    <scope>provided</scope>
-                </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

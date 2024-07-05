@@ -27,8 +27,27 @@
             <spark.version>{{ spark_version }}</spark.version>
         </properties>
     {%- endif %}
-    {%- if not is_ml %}
+
     <profiles>
+        <profile>
+            <id>add-all-dependencies</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <dependencies>
+                {%- for il in platform_independent_libraries %}
+                    <dependency>
+                        <groupId>{{ il.group_id }}</groupId>
+                        <artifactId>{{ il.artifact_id }}</artifactId>
+                        <version>{{ il.artifact_version }}</version>
+                        {%- if il.classifier %}
+                        <classifier>{{ il.classifier }}</classifier>
+                        {%- endif %}
+                        <scope>provided</scope>
+                    </dependency>
+                {%- endfor %}
+            </dependencies>
+        </profile>
         {%- for name, prof in profiles.items() %}
         {%- if prof.libraries|length > 0 %}
         <profile>
@@ -47,6 +66,9 @@
                         <groupId>{{ lib.group_id }}</groupId>
                         <artifactId>{{ lib.artifact_id }}</artifactId>
                         <version>{{ lib.artifact_version }}</version>
+                        {%- if lib.classifier %}
+                        <classifier>{{ lib.classifier }}</classifier>
+                        {%- endif %}
                         <scope>provided</scope>
                     </dependency>
                     {%- endfor %}
@@ -56,7 +78,7 @@
         {%- endif %}
         {%- endfor %}
     </profiles>
-    {%- endif %}
+
     <dependencyManagement>
         <dependencies>
             {%- for il in platform_independent_libraries %}

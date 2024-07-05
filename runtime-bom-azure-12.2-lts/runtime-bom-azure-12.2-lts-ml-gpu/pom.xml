@@ -12,6 +12,54 @@
     <!--Source: https://learn.microsoft.com/en-us/azure/databricks/release-notes/runtime/12.2lts-ml-->
     <artifactId>runtime-bom-azure-12.2-lts-ml-gpu</artifactId>
     <packaging>pom</packaging>
+
+    <profiles>
+        <profile>
+            <id>add-all-dependencies</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <dependencies>
+                    <dependency>
+                        <groupId>com.typesafe.akka</groupId>
+                        <artifactId>akka-actor_${scala.major.version}</artifactId>
+                        <version>2.5.23</version>
+                        <scope>provided</scope>
+                    </dependency>
+                    <dependency>
+                        <groupId>ml.combust.mleap</groupId>
+                        <artifactId>mleap-databricks-runtime_${scala.major.version}</artifactId>
+                        <version>0.20.0</version>
+                        <scope>provided</scope>
+                    </dependency>
+                    <dependency>
+                        <groupId>ml.dmlc</groupId>
+                        <artifactId>xgboost4j-gpu_${scala.major.version}</artifactId>
+                        <version>1.7.3</version>
+                        <scope>provided</scope>
+                    </dependency>
+                    <dependency>
+                        <groupId>ml.dmlc</groupId>
+                        <artifactId>xgboost4j-spark-gpu_${scala.major.version}</artifactId>
+                        <version>1.7.3</version>
+                        <scope>provided</scope>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.mlflow</groupId>
+                        <artifactId>mlflow-client</artifactId>
+                        <version>2.1.1</version>
+                        <scope>provided</scope>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.scala-lang.modules</groupId>
+                        <artifactId>scala-java8-compat_${scala.major.version}</artifactId>
+                        <version>0.8.0</version>
+                        <scope>provided</scope>
+                    </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
     <dependencyManagement>
         <dependencies>
                 <dependency>
@@ -23,7 +71,7 @@
                 <dependency>
                     <groupId>ml.combust.mleap</groupId>
                     <artifactId>mleap-databricks-runtime_${scala.major.version}</artifactId>
-                    <version>v0.20.0-db1</version>
+                    <version>0.20.0</version>
                     <scope>provided</scope>
                 </dependency>
                 <dependency>
@@ -39,12 +87,6 @@
                     <scope>provided</scope>
                 </dependency>
                 <dependency>
-                    <groupId>org.graphframes</groupId>
-                    <artifactId>graphframes_${scala.major.version}</artifactId>
-                    <version>0.8.2-db1-spark3.2</version>
-                    <scope>provided</scope>
-                </dependency>
-                <dependency>
                     <groupId>org.mlflow</groupId>
                     <artifactId>mlflow-client</artifactId>
                     <version>2.1.1</version>
@@ -54,12 +96,6 @@
                     <groupId>org.scala-lang.modules</groupId>
                     <artifactId>scala-java8-compat_${scala.major.version}</artifactId>
                     <version>0.8.0</version>
-                    <scope>provided</scope>
-                </dependency>
-                <dependency>
-                    <groupId>org.tensorflow</groupId>
-                    <artifactId>spark-tensorflow-connector_${scala.major.version}</artifactId>
-                    <version>1.15.0</version>
                     <scope>provided</scope>
                 </dependency>
         </dependencies>

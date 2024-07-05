@@ -75,4 +75,6 @@ where
 
 Please select the latest version.
 
-Packages: https://central.sonatype.com/namespace/io.github.zubtsov.databricks 
+[Packages in Maven central](https://central.sonatype.com/namespace/io.github.zubtsov.databricks)
+
+[Script for POMs and dependencies validation](validate_poms.ps1)

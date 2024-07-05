@@ -1,3 +1,3 @@
-Push-Location pom_generator
-python render.py
-Pop-Location
+$env:PYTHONPATH = "${PSScriptRoot}/src"
+
+python "${PSScriptRoot}/src/pom_generator/render.py"

@@ -1,6 +1,8 @@
 import json
 import os
-from constants import *
+import re
+
+from common.constants import *
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -8,9 +10,10 @@ POM_FILE_NAME = 'pom.xml'
 ROOT_POM_TEMPLATE_NAME = 'root_pom.xml.jinja'
 REGULAR_POM_TEMPLATE_NAME = 'pom.xml.jinja'
 
-TEMPLATES_FOLDER = os.path.join(os.path.pardir, 'templates')
-SCRAPED_FOLDER = os.path.join(os.path.pardir, os.path.pardir, '.scraped')
-OUTPUT_FOLDER = os.path.join(os.path.pardir, os.path.pardir)
+folder_with_script = os.path.dirname(os.path.realpath(__file__))
+TEMPLATES_FOLDER = os.path.join(folder_with_script, os.path.pardir, os.path.pardir, 'templates')
+SCRAPED_FOLDER = os.path.join(folder_with_script, os.path.pardir, os.path.pardir, os.path.pardir, '.scraped')
+OUTPUT_FOLDER = os.path.join(folder_with_script, os.path.pardir, os.path.pardir, os.path.pardir)
 
 
 def render_root_pom(runtimes_info, jinja_env):
@@ -114,29 +117,12 @@ def build_extra_context(rel_info, scala_vers_map):
     }
 
     for ri_lib in rel_info['installed_libraries']:
-        # on Apache Spark 3.5 tests fail because of the version of this dependency
-        is_janino = ri_lib['group_id'] == 'org.codehaus.janino'
-        # these dependencies are removed because of the version conflict: with and without -natives
-        is_natives_netlib = ri_lib['group_id'] == 'com.github.fommil.netlib' and \
-                            ri_lib['artifact_id'] in {'native_ref-java',
-                                                      'native_system-java'} and \
-                            ri_lib['artifact_version'].endswith('-natives')
-        if is_natives_netlib or is_janino:
+        if is_skipped_artifact(ri_lib, scala_major_version):
             continue
-
-            # TODO: replace only suffix
-        if ri_lib['group_id'] == 'org.scala-lang':
-            ri_lib['artifact_id'] = ri_lib['artifact_id'].replace(f'_{scala_major_version}',
-                                                                  '')
-        else:
-            ri_lib['artifact_id'] = ri_lib['artifact_id'].replace(f'_{scala_major_version}',
-                                                                  '_${scala.major.version}')
-        if 'org.scala-lang' in ri_lib['group_id'] and rel_scala_version == ri_lib['artifact_version']:
-            ri_lib['artifact_version'] = '${scala.version}'
-
-        if '-shaded-protobuf' in ri_lib['artifact_version']:
-            ri_lib['artifact_version'] = ri_lib['artifact_version'].replace('-shaded-protobuf', '')
-            ri_lib['classifier'] = 'shaded-protobuf'
+        fix_scala_lang_artifact(ri_lib, scala_major_version, rel_scala_version)
+        embed_scala_major_version_into_artifact_id(ri_lib, scala_major_version)
+        fix_classifier(ri_lib)
+        fix_version_suffix(ri_lib)
 
         if WINDOWS_X86_64_INDICATOR in ri_lib['artifact_id'] or WINDOWS_X86_64_INDICATOR in ri_lib['artifact_version']:
             profiles[WINDOWS_X86_64_INDICATOR]['libraries'].append(ri_lib)
@@ -161,6 +147,82 @@ def build_extra_context(rel_info, scala_vers_map):
         ]
 
     return extra_context
+
+
+def is_skipped_artifact(ri_lib, scala_major_version):
+    # on Apache Spark 3.5 tests fail because of the version of this dependency
+    is_janino = ri_lib['group_id'] == 'org.codehaus.janino'
+    # # these dependencies are removed because of the version conflict: with and without -natives
+    # is_natives_netlib = ri_lib['group_id'] == 'com.github.fommil.netlib' and \
+    #                     ri_lib['artifact_id'] in {'native_ref-java',
+    #                                               'native_system-java'} and \
+    #                     ri_lib['artifact_version'].endswith('-natives')
+    is_missing_from_maven_central = (ri_lib['group_id'], ri_lib['artifact_id'], ri_lib['artifact_version']) in [
+        ('com.databricks', 'Rserve', ri_lib['artifact_version']),
+        ('com.databricks', 'jets3t', ri_lib['artifact_version']),
+        ('com.databricks.scalapb', f'compilerplugin_{scala_major_version}', ri_lib['artifact_version']),
+        ('com.databricks.scalapb', f'scalapb-runtime_{scala_major_version}', ri_lib['artifact_version']),
+        ('hive-2.3__hadoop-2.7', 'jets3t-0.7', ri_lib['artifact_version']),
+        ('hive-2.3__hadoop-3.2', 'jets3t-0.7', ri_lib['artifact_version']),
+        ('hive-2.3__hadoop-2.7', 'zookeeper-3.4', ri_lib['artifact_version']),
+        ('maven-trees', 'hive-2.3__hadoop-2.7', ri_lib['artifact_version']),
+        ('maven-trees', 'hive-2.3__hadoop-3.2', ri_lib['artifact_version']),
+        ('org.tensorflow', f'spark-tensorflow-connector_{scala_major_version}', ri_lib['artifact_version']),
+        ('org.graphframes', f'graphframes_{scala_major_version}', ri_lib['artifact_version']),
+        ('graphframes', f'graphframes', '0.8.1-db3-spark3.1'),
+        ('graphframes', f'graphframes', '0.8.1-db3-spark3.2'),
+        ('graphframes', f'graphframes', '0.8.2-db1-spark3.2'),
+        # perhaps, temporary unavailable
+        # org.pentaho:pentaho-aggdesigner-algorithm:jar:5.1.5-jhyde is missing
+        ('org.apache.hive', 'hive-cli', ri_lib['artifact_version'])
+
+    ]
+    return is_janino or is_missing_from_maven_central  # or is_natives_netlib
+
+
+def fix_version_suffix(ri_lib):
+    pattern = r'-databricks-?\d*$'
+    ri_lib['artifact_version'] = re.sub(pattern, '', ri_lib['artifact_version'])
+
+    weird_suffixes = ['-4882dc3', '-23eb1ef']
+
+    for ws in weird_suffixes:
+        if ri_lib['artifact_version'].endswith(ws):
+            ri_lib['artifact_version'] = ri_lib['artifact_version'][:-len(ws)]
+
+    if ri_lib['artifact_version'].startswith('v') and \
+            ri_lib['artifact_version'].endswith('-db1') or ri_lib['artifact_version'].endswith('-db2'):
+        ri_lib['artifact_version'] = ri_lib['artifact_version'][1:-4]
+
+
+def fix_classifier(ri_lib):
+    for version_suffix in ['-shaded-protobuf', '-natives']:
+        if ri_lib['artifact_version'].endswith(version_suffix):
+            ri_lib['artifact_version'] = ri_lib['artifact_version'].replace(version_suffix,
+                                                                            '')  # TODO: replace suffix only
+            ri_lib['classifier'] = version_suffix.lstrip('-')
+            break
+
+    for artifact_id_suffix in ['-natives', '-hadoop2', '-shaded-protobuf']:
+        if ri_lib['artifact_id'].endswith(artifact_id_suffix):
+            ri_lib['artifact_id'] = ri_lib['artifact_id'].replace(artifact_id_suffix, '')  # TODO: replace suffix only
+            ri_lib['classifier'] = artifact_id_suffix.lstrip('-')
+            break
+
+
+def embed_scala_major_version_into_artifact_id(ri_lib, scala_major_version):
+    if ri_lib['group_id'] != 'org.scala-lang':
+        # TODO: replace only suffix
+        ri_lib['artifact_id'] = ri_lib['artifact_id'].replace(f'_{scala_major_version}',
+                                                              '_${scala.major.version}')
+
+
+def fix_scala_lang_artifact(ri_lib, scala_major_version, rel_scala_version):
+    if ri_lib['group_id'] == 'org.scala-lang':
+        ri_lib['artifact_id'] = ri_lib['artifact_id'].replace(f'_{scala_major_version}',
+                                                              '')
+    if 'org.scala-lang' in ri_lib['group_id'] and rel_scala_version == ri_lib['artifact_version']:
+        ri_lib['artifact_version'] = '${scala.version}'
 
 
 def build_artifact_id(cloud_name, runtime_version, is_lts, is_ml, is_gpu_accelerated):
